@@ -3,9 +3,9 @@ package server
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/pkg/config"
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/pkg/logger"
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/server/controller"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/pkg/config"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/pkg/logger"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/server/controller"
 	"go.uber.org/zap"
 	"net/http"
 )

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/store/dao"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/store/dao"
 	"go.uber.org/zap"
 	"net/http"
 )

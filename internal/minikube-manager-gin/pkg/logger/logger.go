@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/pkg/config"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/pkg/config"
 	"net"
 	"net/http"
 	"net/http/httputil"

@@ -2,8 +2,8 @@ package mysql
 
 import (
 	"fmt"
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/pkg/config"
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/store/model"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/pkg/config"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/store/model"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

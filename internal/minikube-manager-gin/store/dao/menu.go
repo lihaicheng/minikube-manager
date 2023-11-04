@@ -1,8 +1,8 @@
 package dao
 
 import (
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/store/model"
-	"github.com/lihaicheng/minikube-manager/internal/layui-server-gin/store/mysql"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/store/model"
+	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/store/mysql"
 	"gorm.io/gorm"
 )
 
