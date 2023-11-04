@@ -1,12 +1,15 @@
 package mysql
 
 import (
+	"errors"
 	"fmt"
 	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/pkg/config"
 	"github.com/lihaicheng/minikube-manager/internal/minikube-manager-gin/store/model"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os/exec"
+	"strings"
 	"time"
 )
 
@@ -14,6 +17,13 @@ var DB *gorm.DB
 
 // InitDB 初始化mysql数据库
 func InitDB(cfg *config.Settings) error {
+	var err error
+	err = InitMysqlDocker(cfg)
+	if err != nil {
+		zap.L().Error("database: run mysql docker failed")
+		return err
+	}
+
 	user := cfg.MysqlSettings.User
 	password := cfg.MysqlSettings.Password
 	host := cfg.MysqlSettings.Host
@@ -21,12 +31,12 @@ func InitDB(cfg *config.Settings) error {
 	database := cfg.MysqlSettings.Database
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
 		user, password, host, port, database)
-
+	zap.L().Info("database: dsn info is " + dsn)
 	dialector := mysql.Open(dsn)
 	dbConfig := &gorm.Config{
 		SkipDefaultTransaction: true,
 	}
-	var err error
+
 	DB, err = gorm.Open(dialector, dbConfig)
 	if err != nil {
 		return err
@@ -63,6 +73,66 @@ func InitDB(cfg *config.Settings) error {
 	}
 
 	return nil
+}
+
+// InitMysqlDocker 拉起mysql容器
+func InitMysqlDocker(cfg *config.Settings) error {
+	containerName := "mysql-mkm"
+	if isContainerRunning(containerName) {
+		zap.L().Info("database: MySQL container is already running.")
+		return nil
+	}
+	composeFilePath := "configs/docker-compose.yml"
+	if isContainerExistsButNotRunning(containerName) {
+		zap.L().Info("database: MySQL container exists but not running.")
+		cmd := exec.Command("docker-compose", "-f", composeFilePath, "start")
+		err := cmd.Run()
+		if err != nil {
+			zap.L().Error("database: cmd Run failed.", zap.Error(err))
+		}
+	} else {
+		zap.L().Info("database: MySQL container is not exists.")
+		cmd := exec.Command("docker-compose", "-f", composeFilePath, "up", "-d")
+		err := cmd.Run()
+		if err != nil {
+			zap.L().Error("database: cmd Run failed.", zap.Error(err))
+		}
+	}
+
+	// 等待容器启动
+	if err := waitForContainerRunning(containerName); err != nil {
+		zap.L().Error("database: MySQL container didn't start within the expected time.", zap.Error(err))
+		return err
+	}
+	return nil
+}
+
+func isContainerRunning(containerName string) bool {
+	// 检查是否容器正在运行
+	cmd := exec.Command("docker", "ps", "--filter", "name="+containerName, "--format", "{{.Names}}")
+	output, _ := cmd.CombinedOutput()
+	containers := string(output)
+	return strings.Contains(containers, containerName)
+}
+
+func isContainerExistsButNotRunning(containerName string) bool {
+	// 检查是否容器正在运行
+	cmd := exec.Command("docker", "ps", "-a", "--filter", "name="+containerName, "--format", "{{.Names}}")
+	output, _ := cmd.CombinedOutput()
+	containers := string(output)
+	return strings.Contains(containers, containerName)
+}
+
+func waitForContainerRunning(containerName string) error {
+	maxRetries := 60
+	interval := time.Second
+	for i := 0; i < maxRetries; i++ {
+		if isContainerRunning(containerName) {
+			return nil
+		}
+		time.Sleep(interval)
+	}
+	return errors.New("Container did not start within the expected time")
 }
 
 func autoMigrate() error {

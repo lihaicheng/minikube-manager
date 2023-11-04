@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	linuxDefaultConfigFile = "configs/minikube-manager.conf"
+	defaultConfigFile = "configs/minikube-manager.conf"
 )
 
 var (
@@ -61,7 +61,7 @@ func (w *serviceWrapper) Stop(s svc.Service) error {
 }
 
 func init() {
-	flag.StringVar(&configFile, "c", linuxDefaultConfigFile, "config file path.")
+	flag.StringVar(&configFile, "c", defaultConfigFile, "config file path.")
 
 	flag.BoolVar(&version, "v", false, "print version number.")
 	flag.Usage = func() {
@@ -79,7 +79,7 @@ func main() {
 		Name:        "github.com/lihaicheng/minikube-manager",
 		DisplayName: "github.com/lihaicheng/minikube-manager",
 		Description: "github.com/lihaicheng/minikube-manager",
-		Arguments:   []string{"-c", linuxDefaultConfigFile},
+		Arguments:   []string{"-c", defaultConfigFile},
 		Option:      options,
 	}
 	wrapper := &serviceWrapper{}

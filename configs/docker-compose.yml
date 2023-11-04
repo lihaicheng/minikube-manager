@@ -1,0 +1,19 @@
+# yaml 配置
+version: "3.7"
+services:
+  mysql-mkm:
+    container_name: "mysql-mkm"
+    image: "mysql:5.7.39"
+    ports:
+      - "33013:3306"
+    command: "--defaults-file=/etc/mysql/my.cnf --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=mkm
+      - MYSQL_PASSWORD=123456
+    volumes:
+      - ./mysql/log:/var/log/mysql
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf/my.cnf:/etc/mysql/my.cnf
+    privileged: true
