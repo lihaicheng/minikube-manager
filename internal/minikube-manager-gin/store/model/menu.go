@@ -11,8 +11,14 @@ const (
 
 type Menu struct {
 	gorm.Model
-	Flag  string `gorm:"column:flag; type:string; size:36; not null; unique; <-:create;"`
-	Value string `gorm:"column:value; type:longtext; "`
+	UUID   string   `gorm:"column:uuid; type:string; size:36; not null; unique; <-:create;"`
+	Type   string   `gorm:"column:type; type:string; size:5; unique;"` // home、logo、menu
+	Title  string   `gorm:"column:title; type:string; size:50; "`
+	Image  string   `gorm:"column:image; type:string; omitempty"`
+	Href   string   `gorm:"column:href; type:string;"`
+	Target string   `gorm:"column:target; type:string;omitempty"`
+	Child  []string `gorm:"column:child; type:json;omitempty"`
+	Value  string   `gorm:"column:value; type:longtext; "`
 }
 
 // TableName returns table name

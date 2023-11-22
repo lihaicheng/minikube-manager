@@ -128,6 +128,7 @@ func waitForContainerRunning(containerName string) error {
 	interval := time.Second
 	for i := 0; i < maxRetries; i++ {
 		if isContainerRunning(containerName) {
+			zap.L().Info("database: MySQL container is already running.")
 			return nil
 		}
 		time.Sleep(interval)

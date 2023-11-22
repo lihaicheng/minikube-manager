@@ -7,6 +7,20 @@ import (
 	"net/http"
 )
 
+type Menu struct {
+	HomeInfo Info   `json:"homeInfo"`
+	LogoInfo Info   `json:"logoInfo"`
+	MenuInfo []Info `json:"menuInfo"`
+}
+
+type Info struct {
+	Title  string `json:"title,omitempty"`
+	Image  string `json:"image,omitempty"`
+	Href   string `json:"href"`
+	Target string `json:"target,omitempty"`
+	Child  []Info `json:"child,omitempty"`
+}
+
 func DefaultInitMenuHandler(c *gin.Context) {
 	// JSON文本作为字符串
 	filter := make(map[string]interface{}, 0)
